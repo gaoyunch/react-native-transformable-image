@@ -1,6 +1,5 @@
-import React, { Component, FunctionComponent, useEffect, useRef, useState } from 'react';
+import React, { Component, FunctionComponent, useEffect, useMemo, useRef, useState } from 'react';
 import { Image, ImageLoadEventData, ImageProps, ImageStyle, ImageURISource, LayoutChangeEvent, NativeSyntheticEvent, StyleProp, View, ViewStyle } from 'react-native';
-import PropTypes from "prop-types";
 import ViewTransformer from '@gaoyunch/react-native-view-transformer';
 
 type Pixels = {
@@ -22,36 +21,28 @@ export type TransformableImageProps = ImageProps & {
 
 const TransformableImage: FunctionComponent<TransformableImageProps> = (props) => {
 
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [pixels, setPixels] = useState<Pixels | undefined>(undefined);
+  const [pixels, setPixels] = useState<Pixels | undefined>(props.pixels);
   const [keyAcumulator, setKeyAcumulator] = useState(1);
   const viewTransformerRef = useRef<ViewTransformer>(null);
+  const [imageWidth, setImageWidth] = useState(0);
+  const [imageHeight, setImageHeight] = useState(0);
+  const imageSource = useRef(props.source);
 
-  let maxScale = 1;
-  let contentAspectRatio = undefined;
-  let _width = props?.pixels?.width ?? pixels?.width;
-  let _height = props?.pixels?.height ?? pixels?.height;
-  if (_width && _height) {
-    contentAspectRatio = _width / _height;
-    if (width && height) {
-      maxScale = Math.max(_width / width, _height / height);
-      maxScale = Math.max(1, maxScale);
-    }
-  }
-
+  /** 初始化执行 */
   useEffect(() => {
     if (!props.pixels) {
       getImageSize(props.source);
     }
   }, []);
 
+  /** 当图片的source发生改变时执行 */
   useEffect(() => {
-    if (props.source) {
+    if (!sameSource(props.source, imageSource.current)) {
       setPixels(undefined);
       setKeyAcumulator(keyAcumulator + 1);
       getImageSize(props.source);
+      imageSource.current = props.source;
     }
   }, [props.source])
 
@@ -67,9 +58,9 @@ const TransformableImage: FunctionComponent<TransformableImageProps> = (props) =
 
   const onLayout = (event: LayoutChangeEvent) => {
     let layout = event.nativeEvent.layout;
-    if (width !== layout.width || height !== layout.height) {
-      setWidth(width);
-      setHeight(height);
+    if (imageWidth !== layout.width || imageHeight !== layout.height) {
+      setImageWidth(layout.width);
+      setImageHeight(layout.height);
     }
   }
 
@@ -92,6 +83,27 @@ const TransformableImage: FunctionComponent<TransformableImageProps> = (props) =
     }
   }
 
+  const getMaxScale = useMemo(() => {
+    let maxScale = 1;
+    const { width, height } = pixels || {};
+    if (width && height) {
+      if (imageWidth && imageHeight) {
+        maxScale = Math.max(width / imageWidth, height / imageHeight);
+        maxScale = Math.max(1, maxScale);
+      }
+    }
+    return maxScale;
+  }, [pixels, imageHeight, imageWidth])
+
+  const getContentAspectRatio = useMemo(() => {
+    const { width, height } = pixels || {};
+    if (width && height) {
+      return width / height;
+    } else {
+      return undefined
+    }
+  }, [pixels])
+
   return (
     <ViewTransformer
       ref={viewTransformerRef}
@@ -99,11 +111,12 @@ const TransformableImage: FunctionComponent<TransformableImageProps> = (props) =
       enableTransform={props.enableTransform && imageLoaded}
       enableScale={props.enableScale}
       enableTranslate={props.enableTranslate}
+      enableResistance={true}
       onTransformGestureReleased={props.onTransformGestureReleased}
       onViewTransformed={props.onViewTransformed}
       onSingleTapConfirmed={props.onSingleTapConfirmed}
-      maxScale={maxScale}
-      contentAspectRatio={contentAspectRatio}
+      maxScale={getMaxScale}
+      contentAspectRatio={getContentAspectRatio}
       onLayout={onLayout}
       style={props.style}
     >
@@ -126,3 +139,15 @@ TransformableImage.defaultProps = {
 }
 
 export default TransformableImage;
+
+const sameSource = (source: ImageURISource, nextSource: ImageURISource) => {
+  if (source === nextSource) {
+    return true;
+  }
+  if (source && nextSource) {
+    if (source.uri && nextSource.uri) {
+      return source.uri === nextSource.uri;
+    }
+  }
+  return false;
+}
