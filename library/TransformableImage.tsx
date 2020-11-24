@@ -25,7 +25,7 @@ const TransformableImage: FunctionComponent<TransformableImageProps> = (props) =
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [pixels, setPixels] = useState<Pixels>(undefined);
+  const [pixels, setPixels] = useState<Pixels | undefined>(undefined);
   const [keyAcumulator, setKeyAcumulator] = useState(1);
   const viewTransformerRef = useRef<ViewTransformer>(null);
 
