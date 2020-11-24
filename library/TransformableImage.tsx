@@ -1,5 +1,5 @@
 import React, { Component, FunctionComponent, useEffect, useRef, useState } from 'react';
-import { Image, ImageProps, ImageStyle, ImageURISource, StyleProp, View, ViewStyle } from 'react-native';
+import { Image, ImageLoadEventData, ImageProps, ImageStyle, ImageURISource, LayoutChangeEvent, NativeSyntheticEvent, StyleProp, View, ViewStyle } from 'react-native';
 import PropTypes from "prop-types";
 import ViewTransformer from '@gaoyunch/react-native-view-transformer';
 
@@ -31,8 +31,8 @@ const TransformableImage: FunctionComponent<TransformableImageProps> = (props) =
 
   let maxScale = 1;
   let contentAspectRatio = undefined;
-  let _width = props?.pixels?.width ?? pixels.width;
-  let _height = props?.pixels?.height ?? pixels.height;
+  let _width = props?.pixels?.width ?? pixels?.width;
+  let _height = props?.pixels?.height ?? pixels?.height;
   if (_width && _height) {
     contentAspectRatio = _width / _height;
     if (width && height) {
@@ -60,13 +60,13 @@ const TransformableImage: FunctionComponent<TransformableImageProps> = (props) =
     setImageLoaded(false);
   }
 
-  const onLoad = (e) => {
-    props.onLoad?.(e);
+  const onLoad = (event: NativeSyntheticEvent<ImageLoadEventData>) => {
+    props.onLoad?.(event);
     setImageLoaded(true);
   }
 
-  const onLayout = (e) => {
-    let layout = e.nativeEvent.layout;
+  const onLayout = (event: LayoutChangeEvent) => {
+    let layout = event.nativeEvent.layout;
     if (width !== layout.width || height !== layout.height) {
       setWidth(width);
       setHeight(height);
