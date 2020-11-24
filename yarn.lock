@@ -664,10 +664,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@gaoyunch/react-native-view-transformer@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@gaoyunch/react-native-view-transformer/-/react-native-view-transformer-0.1.0.tgz#a7079a8ebc3650f9d2894c5564e67ee7c1fd6377"
-  integrity sha512-QxrWLGso7GLNqzOrKR5yfLHkOemzRSO3n3tBRyMAkgjKzQrJDfEMVo36PiqpG1qVekwXJt10b0siqIhehOs8ew==
+"@gaoyunch/react-native-view-transformer@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@gaoyunch/react-native-view-transformer/-/react-native-view-transformer-0.1.1.tgz#7e7500e5db255dab0c206a6fc7227fbeb1246c72"
+  integrity sha512-SGgsu3wFZ96tb5UFZsBckd8JT7anJDLFi3EZGL1mtBP3Dd5YtZpTh+UV9p4oyZYSU3Xap2RjqCKokEhqJRO70w==
   dependencies:
     react-native-gesture-responder "0.1.1"
     react-native-scroller "0.0.6"

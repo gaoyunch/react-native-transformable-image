@@ -2,7 +2,7 @@
   "name": "@gaoyunch/react-native-transformable-image",
   "version": "0.1.1",
   "description": "A pure JavaScript written transformable image component, like PhotoView or ImageViewer, supports gestures like pan, pinch, double tab and fling, works with both iOS and Android.",
-  "main": "library/TransformableImage.js",
+  "main": "library/TransformableImage.tsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/gaoyunch/react-native-transformable-image#readme",
   "dependencies": {
-    "@gaoyunch/react-native-view-transformer": "^0.1.0"
+    "@gaoyunch/react-native-view-transformer": "^0.1.1"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
