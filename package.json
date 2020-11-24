@@ -18,5 +18,11 @@
   "homepage": "https://github.com/gaoyunch/react-native-transformable-image#readme",
   "dependencies": {
     "@gaoyunch/react-native-view-transformer": "0.0.29"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.0",
+    "@types/react-native": "^0.63.37",
+    "react": "^17.0.1",
+    "react-native": "^0.63.3"
   }
 }
